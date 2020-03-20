@@ -6,7 +6,6 @@
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
-
    Skip to Step 3.
 */
 
@@ -24,18 +23,71 @@
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+/* List of LS Instructors Github username's:
+tetondan
+dustinmyers
+justsml
+luishrd
+bigknell
+*/
+const followerArr = [];
+
+axios
+  .get('https://api.github.com/users/aware91')
+  .then((response) => {
+    comp(response.data);
+    return axios.get('https://api.github.com/users/aware91/followers');
+  })
+  .then((response) => {
+    response.data.map((user) => {
+      comp(user);
+    });
+  });
+
+function comp(obj) {
+  const cont = document.querySelector('.cards');
+  const parentDiv = document.createElement('div');
+  const img = document.createElement('img');
+  const childDiv = document.createElement('div');
+  const h3 = document.createElement('h3');
+  const userName = document.createElement('p');
+  const location = document.createElement('p');
+  const profile = document.createElement('p');
+  const profAddr = document.createElement('a');
+  const followers = document.createElement('p');
+  const following = document.createElement('p');
+  const bio = document.createElement('p');
+
+  parentDiv.classList.add('card');
+  childDiv.classList.add('card-info');
+  h3.classList.add('name');
+  userName.classList.add('username');
+
+  cont.appendChild(parentDiv);
+  parentDiv.append(img, childDiv);
+  childDiv.append(h3, userName, location, profile, followers, following, bio);
+  profile.appendChild(profAddr);
+
+  h3.textContent = obj.name;
+  img.src = obj.avatar_url;
+  userName.textContent = obj.login;
+  location.textContent = obj.location;
+  profAddr.setAttribute(`href`, obj.html_url);
+  profAddr.textContent = 'Check out my Github';
+  followers.textContent = `Followers: ${obj.followers}`;
+  following.textContent = `Following: ${obj.following}`;
+  bio.textContent = `Bio: ${obj.bio}`;
+}
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
-
 <div class="card">
   <img src={image url of user} />
   <div class="card-info">
     <h3 class="name">{users name}</h3>
     <p class="username">{users user name}</p>
     <p>Location: {users location}</p>
-    <p>Profile:  
+    <p>Profile:
       <a href={address to users github page}>{address to users github page}</a>
     </p>
     <p>Followers: {users followers count}</p>
@@ -43,10 +95,9 @@ const followersArray = [];
     <p>Bio: {users bio}</p>
   </div>
 </div>
-
 */
 
-/* List of LS Instructors Github username's: 
+/* List of LS Instructors Github username's:
   tetondan
   dustinmyers
   justsml
